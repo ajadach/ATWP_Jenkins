@@ -46,13 +46,14 @@ freeStyleJob('ATWP_Tests_Artur') {
 
     // Publikacja wyników Robot Framework po zakończeniu kroków
     publishers {
-        robotFrameworkPublisher {
+        robot {
             outputPath('results/artur')
             outputFileName('output.xml')
             reportFileName('report.html')
             logFileName('log.html')
             passThreshold(100.0)
             unstableThreshold(75.0)
+            onlyCritical(true)
         }
     }
 }
@@ -84,13 +85,14 @@ freeStyleJob('ATWP_Tests_Tomek') {
 
     // Publikacja wyników Robot Framework po zakończeniu kroków
     publishers {
-        robotFrameworkPublisher {
+        robot {
             outputPath('results/tomek')
             outputFileName('output.xml')
             reportFileName('report.html')
             logFileName('log.html')
             passThreshold(100.0)
             unstableThreshold(75.0)
+            onlyCritical(true)
         }
     }
 }
