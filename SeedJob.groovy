@@ -21,104 +21,76 @@
 
 // ============================================================
 // Job 1: Testy Artura
-// Osobny job odpowiedzialny wyłącznie za testy napisane przez Artura
+// Zwykły Freestyle job - pobiera kod, instaluje zależności, uruchamia testy
 // ============================================================
-pipelineJob('ATWP_Tests_Artur') {
+freeStyleJob('ATWP_Tests_Artur') {
     description('Testy Robot Framework - Artur')
 
-    definition {
-        cps {
-            script('''
-                pipeline {
-                    agent any
-                    stages {
-                        // Pobranie kodu z repozytorium GitHub
-                        stage('Checkout') {
-                            steps {
-                                git url: 'https://github.com/ajadach/ATWP_Jenkins.git', branch: 'main'
-                            }
-                        }
-                        // Instalacja zależności Pythona
-                        stage('Install Dependencies') {
-                            steps {
-                                bat 'pip install -r requirements.txt'
-                            }
-                        }
-                        // Uruchomienie testów Artura
-                        stage('Run Tests Artur') {
-                            steps {
-                                bat 'python -m robot --outputdir results/artur Tests/PetStore_Test_Artur.robot'
-                            }
-                        }
-                    }
-                    post {
-                        always {
-                            // Publikacja wyników w zakładce "Robot Results" dla tego joba
-                            robot(
-                                outputPath: 'results/artur',
-                                outputFileName: 'output.xml',
-                                reportFileName: 'report.html',
-                                logFileName: 'log.html',
-                                passThreshold: 100,
-                                unstableThreshold: 75
-                            )
-                        }
-                    }
-                }
-            ''')
-            sandbox(false)
+    // Pobranie kodu z repozytorium GitHub
+    scm {
+        git {
+            remote {
+                url('https://github.com/ajadach/ATWP_Jenkins.git')
+            }
+            branch('*/main')
+        }
+    }
+
+    // Kroki budowania wykonywane kolejno
+    steps {
+        // Instalacja zależności Pythona
+        batchFile('pip install -r requirements.txt')
+        // Uruchomienie testów Artura
+        batchFile('python -m robot --outputdir results/artur Tests/PetStore_Test_Artur.robot')
+    }
+
+    // Publikacja wyników Robot Framework po zakończeniu kroków
+    publishers {
+        robotFrameworkPublisher {
+            outputPath('results/artur')
+            outputFileName('output.xml')
+            reportFileName('report.html')
+            logFileName('log.html')
+            passThreshold(100.0)
+            unstableThreshold(75.0)
         }
     }
 }
 
 // ============================================================
 // Job 2: Testy Tomka
-// Osobny job odpowiedzialny wyłącznie za testy napisane przez Tomka
+// Zwykły Freestyle job - pobiera kod, instaluje zależności, uruchamia testy
 // ============================================================
-pipelineJob('ATWP_Tests_Tomek') {
+freeStyleJob('ATWP_Tests_Tomek') {
     description('Testy Robot Framework - Tomek')
 
-    definition {
-        cps {
-            script('''
-                pipeline {
-                    agent any
-                    stages {
-                        // Pobranie kodu z repozytorium GitHub
-                        stage('Checkout') {
-                            steps {
-                                git url: 'https://github.com/ajadach/ATWP_Jenkins.git', branch: 'main'
-                            }
-                        }
-                        // Instalacja zależności Pythona
-                        stage('Install Dependencies') {
-                            steps {
-                                bat 'pip install -r requirements.txt'
-                            }
-                        }
-                        // Uruchomienie testów Tomka
-                        stage('Run Tests Tomek') {
-                            steps {
-                                bat 'python -m robot --outputdir results/tomek Tests/PetStore_Test_Tomek.robot'
-                            }
-                        }
-                    }
-                    post {
-                        always {
-                            // Publikacja wyników w zakładce "Robot Results" dla tego joba
-                            robot(
-                                outputPath: 'results/tomek',
-                                outputFileName: 'output.xml',
-                                reportFileName: 'report.html',
-                                logFileName: 'log.html',
-                                passThreshold: 100,
-                                unstableThreshold: 75
-                            )
-                        }
-                    }
-                }
-            ''')
-            sandbox(false)
+    // Pobranie kodu z repozytorium GitHub
+    scm {
+        git {
+            remote {
+                url('https://github.com/ajadach/ATWP_Jenkins.git')
+            }
+            branch('*/main')
+        }
+    }
+
+    // Kroki budowania wykonywane kolejno
+    steps {
+        // Instalacja zależności Pythona
+        batchFile('pip install -r requirements.txt')
+        // Uruchomienie testów Tomka
+        batchFile('python -m robot --outputdir results/tomek Tests/PetStore_Test_Tomek.robot')
+    }
+
+    // Publikacja wyników Robot Framework po zakończeniu kroków
+    publishers {
+        robotFrameworkPublisher {
+            outputPath('results/tomek')
+            outputFileName('output.xml')
+            reportFileName('report.html')
+            logFileName('log.html')
+            passThreshold(100.0)
+            unstableThreshold(75.0)
         }
     }
 }
