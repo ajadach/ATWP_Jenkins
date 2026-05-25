@@ -124,29 +124,49 @@ pipelineJob('ATWP_Tests_Tomek') {
 }
 
 // ============================================================
-// Job 3: MultiJob - orkiestrator
-// Uruchamia testy Artura i Tomka równolegle jako osobne fazy.
-// Zbiera wyniki po zakończeniu obu jobów.
+// Job 3: Pipeline orkiestrator
+// Uruchamia testy Artura i Tomka równolegle jako osobne joby.
+// Używa 'build job:' zamiast MultiJob - działa z pipelineJob.
 // ============================================================
-multiJob('ATWP_Jenkins_MultiJob') {
+pipelineJob('ATWP_Jenkins_MultiJob') {
     description('Orkiestrator - uruchamia testy Artura i Tomka równolegle')
 
-    // triggers - konfiguracja automatycznego uruchamiania
     triggers {
-        // Uruchamia MultiJob co godzinę
+        // Uruchamia co godzinę
         cron('H * * * *')
 
-        // Uruchamia MultiJob po każdym push do GitHub (wymaga webhooka)
         // Odkomentuj gdy webhook jest gotowy:
         // githubPush()
     }
 
-    steps {
-        // phase - faza równoległa: oba joby uruchamiają się jednocześnie
-        // Drugi parametr 'ALWAYS' = czekaj na oba joby niezależnie od wyniku
-        phase('Run All Tests In Parallel', 'ALWAYS') {
-            phaseJob('ATWP_Tests_Artur')
-            phaseJob('ATWP_Tests_Tomek')
+    definition {
+        cps {
+            script('''
+                pipeline {
+                    agent none
+
+                    stages {
+                        // Faza równoległa - uruchamia joby Artura i Tomka jednocześnie
+                        stage('Run All Tests In Parallel') {
+                            parallel {
+                                // Uruchamia osobny job ATWP_Tests_Artur
+                                stage('Tests Artur') {
+                                    steps {
+                                        build job: 'ATWP_Tests_Artur', wait: true
+                                    }
+                                }
+                                // Uruchamia osobny job ATWP_Tests_Tomek
+                                stage('Tests Tomek') {
+                                    steps {
+                                        build job: 'ATWP_Tests_Tomek', wait: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ''')
+            sandbox(false)
         }
     }
 }
