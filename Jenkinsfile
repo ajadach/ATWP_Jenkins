@@ -16,7 +16,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'robot --outputdir results Tests/'
+                bat 'python -m robot --outputdir results Tests/'
             }
         }
     }
