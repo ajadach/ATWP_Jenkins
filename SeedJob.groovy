@@ -32,10 +32,10 @@ pipelineJob('ATWP_Tests_Artur') {
                 pipeline {
                     agent any
                     stages {
-                        // Pobranie kodu z repozytorium
+                        // Pobranie kodu z repozytorium GitHub
                         stage('Checkout') {
                             steps {
-                                checkout scm
+                                git url: 'https://github.com/ajadach/ATWP_Jenkins.git', branch: 'main'
                             }
                         }
                         // Instalacja zależności Pythona
@@ -84,10 +84,10 @@ pipelineJob('ATWP_Tests_Tomek') {
                 pipeline {
                     agent any
                     stages {
-                        // Pobranie kodu z repozytorium
+                        // Pobranie kodu z repozytorium GitHub
                         stage('Checkout') {
                             steps {
-                                checkout scm
+                                git url: 'https://github.com/ajadach/ATWP_Jenkins.git', branch: 'main'
                             }
                         }
                         // Instalacja zależności Pythona
