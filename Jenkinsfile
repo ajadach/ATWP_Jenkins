@@ -4,35 +4,32 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Pobieranie kodu...'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Budowanie projektu...'
+                bat 'pip install -r requirements.txt'
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                echo 'Uruchamianie testów...'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Wdrażanie aplikacji...'
+                bat 'robot --outputdir results Tests/'
             }
         }
     }
 
     post {
+        always {
+            archiveArtifacts artifacts: 'results/report.html, results/log.html, results/output.xml', allowEmptyArchive: true
+        }
         success {
-            echo 'Pipeline zakończony sukcesem!'
+            echo 'Wszystkie testy przeszły!'
         }
         failure {
-            echo 'Pipeline zakończony błędem!'
+            echo 'Niektóre testy nie przeszły!'
         }
     }
 }

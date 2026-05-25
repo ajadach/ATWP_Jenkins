@@ -1,2 +1,2 @@
 robotframework
-robotframework
+robotframework-requests
