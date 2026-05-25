@@ -143,12 +143,17 @@ multiJob('ATWP_Jenkins_MultiJob') {
 
     steps {
         // phase - faza równoległa: oba joby uruchamiają się jednocześnie
-        // Faza kończy się gdy oba joby zakończą pracę
-        phase('Run All Tests In Parallel') {
+        // Drugi parametr 'SUCCESSFUL' = czekaj na oba joby i kontynuuj gdy skończą
+        // Możliwe wartości: SUCCESSFUL, UNSTABLE, FAILED, ALWAYS
+        phase('Run All Tests In Parallel', 'ALWAYS') {
             // Uruchom job Artura jako część tej fazy
-            phaseJob('ATWP_Tests_Artur')
+            phaseJob('ATWP_Tests_Artur') {
+                currentJobParameters(true)
+            }
             // Uruchom job Tomka jako część tej fazy
-            phaseJob('ATWP_Tests_Tomek')
+            phaseJob('ATWP_Tests_Tomek') {
+                currentJobParameters(true)
+            }
         }
     }
 }
