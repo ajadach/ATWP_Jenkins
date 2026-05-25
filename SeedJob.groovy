@@ -45,8 +45,9 @@ freeStyleJob('ATWP_Tests_Artur') {
     }
 
     // Publikacja wyników Robot Framework po zakończeniu kroków
-    publishers {
-        robot {
+    // Używamy bloku configure bo Robot Framework plugin nie eksponuje DSL API
+    configure { project ->
+        project / 'publishers' << 'hudson.plugins.robot.RobotPublisher' {
             outputPath('results/artur')
             outputFileName('output.xml')
             reportFileName('report.html')
@@ -54,6 +55,8 @@ freeStyleJob('ATWP_Tests_Artur') {
             passThreshold(100.0)
             unstableThreshold(75.0)
             onlyCritical(true)
+            disableArchiveOutput(false)
+            enableCache(false)
         }
     }
 }
@@ -84,8 +87,9 @@ freeStyleJob('ATWP_Tests_Tomek') {
     }
 
     // Publikacja wyników Robot Framework po zakończeniu kroków
-    publishers {
-        robot {
+    // Używamy bloku configure bo Robot Framework plugin nie eksponuje DSL API
+    configure { project ->
+        project / 'publishers' << 'hudson.plugins.robot.RobotPublisher' {
             outputPath('results/tomek')
             outputFileName('output.xml')
             reportFileName('report.html')
@@ -93,6 +97,8 @@ freeStyleJob('ATWP_Tests_Tomek') {
             passThreshold(100.0)
             unstableThreshold(75.0)
             onlyCritical(true)
+            disableArchiveOutput(false)
+            enableCache(false)
         }
     }
 }
