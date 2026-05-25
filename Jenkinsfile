@@ -23,13 +23,14 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'results/report.html, results/log.html, results/output.xml', allowEmptyArchive: true
-        }
-        success {
-            echo 'Wszystkie testy przeszły!'
-        }
-        failure {
-            echo 'Niektóre testy nie przeszły!'
+            robot(
+                outputPath: 'results',
+                outputFileName: 'output.xml',
+                reportFileName: 'report.html',
+                logFileName: 'log.html',
+                passThreshold: 100,
+                unstableThreshold: 75
+            )
         }
     }
 }
