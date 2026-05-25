@@ -106,7 +106,8 @@ freeStyleJob('ATWP_Tests_Tomek') {
 // ============================================================
 // Job 3: MultiJob - orkiestrator
 // Uruchamia testy Artura i Tomka równolegle jako osobne fazy.
-// Działa z freeStyleJob jako dzieci (nie z pipelineJob).
+// Po zakończeniu kopiuje wyniki z obu workspace'ów, scala je przez rebot
+// i publikuje zbiorczy raport Robot Framework na poziomie MultiJob.
 // ============================================================
 multiJob('ATWP_Jenkins_MultiJob') {
     description('Orkiestrator - uruchamia testy Artura i Tomka równolegle')
@@ -120,11 +121,36 @@ multiJob('ATWP_Jenkins_MultiJob') {
     }
 
     steps {
-        // phase - faza równoległa: oba joby uruchamiają się jednocześnie
+        // Faza równoległa - oba joby uruchamiają się jednocześnie
         // ALWAYS = czekaj na oba joby niezależnie od wyniku
         phase('Run All Tests In Parallel', 'ALWAYS') {
             phaseJob('ATWP_Tests_Artur')
             phaseJob('ATWP_Tests_Tomek')
+        }
+
+        // Kopiowanie output.xml z workspace'ów dzieci do workspace MultiJob
+        // %JENKINS_HOME% wskazuje na C:\ProgramData\Jenkins\.jenkins
+        batchFile('''
+            mkdir results\\artur 2>nul
+            mkdir results\\tomek 2>nul
+            xcopy /Y /I "%JENKINS_HOME%\\workspace\\ATWP_Tests_Artur\\results\\artur\\output.xml" "results\\artur\\"
+            xcopy /Y /I "%JENKINS_HOME%\\workspace\\ATWP_Tests_Tomek\\results\\tomek\\output.xml" "results\\tomek\\"
+            python -m robot.rebot --outputdir results --output output.xml --report report.html --log log.html results\\artur\\output.xml results\\tomek\\output.xml
+        ''')
+    }
+
+    // Publikacja zbiorczego raportu Robot Framework na poziomie MultiJob
+    configure { project ->
+        project / 'publishers' << 'hudson.plugins.robot.RobotPublisher' {
+            outputPath('results')
+            outputFileName('output.xml')
+            reportFileName('report.html')
+            logFileName('log.html')
+            passThreshold(100.0)
+            unstableThreshold(75.0)
+            onlyCritical(true)
+            disableArchiveOutput(false)
+            enableCache(false)
         }
     }
 }
