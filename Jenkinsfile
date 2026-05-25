@@ -15,14 +15,24 @@ pipeline {
         }
 
         stage('Run Tests') {
-            steps {
-                bat 'python -m robot --outputdir results Tests/'
+            parallel {
+                stage('Run Tests Artur') {
+                    steps {
+                        bat 'python -m robot --outputdir results/artur Tests/PetStore_Test_Artur.robot'
+                    }
+                }
+                stage('Run Tests Tomek') {
+                    steps {
+                        bat 'python -m robot --outputdir results/tomek Tests/PetStore_Test_Tomek.robot'
+                    }
+                }
             }
         }
     }
 
     post {
         always {
+            bat 'python -m robot.rebot --outputdir results --output output.xml --report report.html --log log.html results/artur/output.xml results/tomek/output.xml'
             robot(
                 outputPath: 'results',
                 outputFileName: 'output.xml',
