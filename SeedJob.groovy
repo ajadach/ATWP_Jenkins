@@ -104,11 +104,11 @@ freeStyleJob('ATWP_Tests_Tomek') {
 }
 
 // ============================================================
-// Job 3: Pipeline orkiestrator
-// Uruchamia testy Artura i Tomka równolegle jako osobne joby.
-// Używa 'build job:' zamiast MultiJob - działa z pipelineJob.
+// Job 3: MultiJob - orkiestrator
+// Uruchamia testy Artura i Tomka równolegle jako osobne fazy.
+// Działa z freeStyleJob jako dzieci (nie z pipelineJob).
 // ============================================================
-pipelineJob('ATWP_Jenkins_MultiJob') {
+multiJob('ATWP_Jenkins_MultiJob') {
     description('Orkiestrator - uruchamia testy Artura i Tomka równolegle')
 
     triggers {
@@ -119,34 +119,12 @@ pipelineJob('ATWP_Jenkins_MultiJob') {
         // githubPush()
     }
 
-    definition {
-        cps {
-            script('''
-                pipeline {
-                    agent none
-
-                    stages {
-                        // Faza równoległa - uruchamia joby Artura i Tomka jednocześnie
-                        stage('Run All Tests In Parallel') {
-                            parallel {
-                                // Uruchamia osobny job ATWP_Tests_Artur
-                                stage('Tests Artur') {
-                                    steps {
-                                        build job: 'ATWP_Tests_Artur', wait: true
-                                    }
-                                }
-                                // Uruchamia osobny job ATWP_Tests_Tomek
-                                stage('Tests Tomek') {
-                                    steps {
-                                        build job: 'ATWP_Tests_Tomek', wait: true
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            ''')
-            sandbox(false)
+    steps {
+        // phase - faza równoległa: oba joby uruchamiają się jednocześnie
+        // ALWAYS = czekaj na oba joby niezależnie od wyniku
+        phase('Run All Tests In Parallel', 'ALWAYS') {
+            phaseJob('ATWP_Tests_Artur')
+            phaseJob('ATWP_Tests_Tomek')
         }
     }
 }

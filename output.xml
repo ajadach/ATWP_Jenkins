@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.12.3 on win32)" generated="2026-05-25T18:52:29.660093" rpa="false" schemaversion="5">
+<suite id="s1" name="PetStore Test Artur" source="D:\jenkins_tutorial\ATWP_Jenkins\Tests\PetStore_Test_Artur.robot">
+<test id="s1-t1" name="Get Pet by ID" line="8">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-05-25T18:52:30.054146" level="INFO">Creating Session using : alias=petstore, url=https://petstore.swagger.io/v2, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>petstore</arg>
+<arg>https://petstore.swagger.io/v2</arg>
+<arg>verify=${False}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-05-25T18:52:30.054146" elapsed="0.000000"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-05-25T18:52:30.055270" level="INFO">${body} = {'id': 1, 'name': 'Doggie', 'photoUrls': [], 'status': 'available'}</msg>
+<var>${body}</var>
+<arg>id=${1}</arg>
+<arg>name=Doggie</arg>
+<arg>photoUrls=@{EMPTY}</arg>
+<arg>status=available</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-05-25T18:52:30.055270" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-05-25T18:52:30.697439" level="INFO">POST Request : url=https://petstore.swagger.io/v2/pet 
+ path_url=/v2/pet 
+ headers={'User-Agent': 'python-requests/2.32.3', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '67'} 
+ body=b'{"id": 1, "name": "Doggie", "photoUrls": [], "status": "available"}' 
+ </msg>
+<msg time="2026-05-25T18:52:30.697439" level="INFO">POST Response : url=https://petstore.swagger.io/v2/pet 
+ status=200, reason=OK 
+ headers={'Date': 'Mon, 25 May 2026 16:52:30 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT', 'Access-Control-Allow-Headers': 'Content-Type, api_key, Authorization', 'Server': 'Jetty(9.2.9.v20150224)'} 
+ body={"id":1,"name":"Doggie","photoUrls":[],"tags":[],"status":"available"} 
+ </msg>
+<msg time="2026-05-25T18:52:30.698438" level="INFO">C:\Python312\Lib\site-packages\urllib3\connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'petstore.swagger.io'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(</msg>
+<arg>petstore</arg>
+<arg>/pet</arg>
+<arg>json=${body}</arg>
+<arg>headers=${HEADERS}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-05-25T18:52:30.056248" elapsed="0.642190"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-05-25T18:52:30.835604" level="INFO">GET Request : url=https://petstore.swagger.io/v2/pet/1 
+ path_url=/v2/pet/1 
+ headers={'User-Agent': 'python-requests/2.32.3', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg time="2026-05-25T18:52:30.835604" level="INFO">GET Response : url=https://petstore.swagger.io/v2/pet/1 
+ status=200, reason=OK 
+ headers={'Date': 'Mon, 25 May 2026 16:52:30 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT', 'Access-Control-Allow-Headers': 'Content-Type, api_key, Authorization', 'Server': 'Jetty(9.2.9.v20150224)'} 
+ body={"id":1,"name":"Doggie","photoUrls":[],"tags":[],"status":"available"} 
+ </msg>
+<msg time="2026-05-25T18:52:30.835604" level="INFO">C:\Python312\Lib\site-packages\urllib3\connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'petstore.swagger.io'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(</msg>
+<msg time="2026-05-25T18:52:30.836308" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<var>${response}</var>
+<arg>petstore</arg>
+<arg>/pet/1</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-05-25T18:52:30.699332" elapsed="0.136976"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-05-25T18:52:30.838136" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${response.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-05-25T18:52:30.837010" elapsed="0.001126"/>
+</kw>
+<tag>Artur</tag>
+<status status="PASS" start="2026-05-25T18:52:30.053273" elapsed="0.785752"/>
+</test>
+<status status="PASS" start="2026-05-25T18:52:29.661105" elapsed="1.180451"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="0" skip="0">Artur</stat>
+</tag>
+<suite>
+<stat name="PetStore Test Artur" id="s1" pass="1" fail="0" skip="0">PetStore Test Artur</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
