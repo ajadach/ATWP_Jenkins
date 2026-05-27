@@ -6,6 +6,10 @@ pipeline {
     // Uruchom na nodzie z labelem "windows-tester"
     // agent { label 'windows-tester' }
 
+    parameters {
+        string(name: 'tag', defaultValue: 'all', description: 'Tag testów do uruchomienia')
+    }
+
     // triggers - definiuje kiedy pipeline ma się automatycznie uruchamiać
     triggers {
         // Trigger 1: uruchamia pipeline co godzinę
