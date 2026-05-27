@@ -2,7 +2,9 @@
 // Jenkins czyta ten plik z repozytorium i wykonuje zdefiniowane etapy.
 pipeline {
     // agent any - Jenkins może użyć dowolnego dostępnego węzła/executora do uruchomienia pipeline
-    agent any
+    // agent any
+    // Uruchom na nodzie z labelem "windows-tester"
+    agent { label 'windows-tester' }
 
     // triggers - definiuje kiedy pipeline ma się automatycznie uruchamiać
     triggers {
