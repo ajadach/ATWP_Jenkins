@@ -23,7 +23,7 @@
 // Job 1: Testy Artura
 // Zwykły Freestyle job - pobiera kod, instaluje zależności, uruchamia testy
 // ============================================================
-freeStyleJob('ATWP_Tests_Artur') {
+freeStyleJob('Tests/ATWP_Tests_Artur') {
     description('Testy Robot Framework - Artur')
 
     // Pobranie kodu z repozytorium GitHub
@@ -65,7 +65,7 @@ freeStyleJob('ATWP_Tests_Artur') {
 // Job 2: Testy Tomka
 // Zwykły Freestyle job - pobiera kod, instaluje zależności, uruchamia testy
 // ============================================================
-freeStyleJob('ATWP_Tests_Tomek') {
+freeStyleJob('Tests/ATWP_Tests_Tomek') {
     description('Testy Robot Framework - Tomek')
 
     // Pobranie kodu z repozytorium GitHub
@@ -124,8 +124,8 @@ multiJob('ATWP_Jenkins_MultiJob') {
         // Faza równoległa - oba joby uruchamiają się jednocześnie
         // ALWAYS = czekaj na oba joby niezależnie od wyniku
         phase('Run All Tests In Parallel', 'ALWAYS') {
-            phaseJob('ATWP_Tests_Artur')
-            phaseJob('ATWP_Tests_Tomek')
+            phaseJob('Tests/ATWP_Tests_Artur')
+            phaseJob('Tests/ATWP_Tests_Tomek')
         }
 
         // Kopiowanie output.xml z workspace'ów dzieci do workspace MultiJob
