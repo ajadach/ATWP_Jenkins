@@ -10,6 +10,10 @@ pipeline {
         string(name: 'tag', defaultValue: 'all', description: 'Tag testów do uruchomienia')
     }
 
+    options {
+        buildDiscarder(logRotator(daysToKeepStr: '14'))
+    }
+
     // triggers - definiuje kiedy pipeline ma się automatycznie uruchamiać
     triggers {
         // Trigger 1: uruchamia pipeline co godzinę

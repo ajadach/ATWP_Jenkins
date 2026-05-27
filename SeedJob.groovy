@@ -25,6 +25,10 @@
 // ============================================================
 freeStyleJob('Tests/ATWP_Tests_Artur') {
     description('Testy Robot Framework - Artur')
+ 
+    parameters {
+        stringParam('tag', 'all', 'Tag testów do uruchomienia')
+    }
 
     // Pobranie kodu z repozytorium GitHub
     scm {
@@ -41,7 +45,7 @@ freeStyleJob('Tests/ATWP_Tests_Artur') {
         // Instalacja zależności Pythona
         batchFile('pip install -r requirements.txt')
         // Uruchomienie testów Artura
-        batchFile('python -m robot --outputdir results/artur Tests/PetStore_Test_Artur.robot')
+        batchFile('python -m robot --outputdir results/artur --include %tag% Tests/PetStore_Test_Artur.robot')
     }
 
     // Publikacja wyników Robot Framework po zakończeniu kroków
@@ -68,6 +72,10 @@ freeStyleJob('Tests/ATWP_Tests_Artur') {
 freeStyleJob('Tests/ATWP_Tests_Tomek') {
     description('Testy Robot Framework - Tomek')
 
+    parameters {
+        stringParam('tag', 'all', 'Tag testów do uruchomienia')
+    }
+
     // Pobranie kodu z repozytorium GitHub
     scm {
         git {
@@ -83,7 +91,7 @@ freeStyleJob('Tests/ATWP_Tests_Tomek') {
         // Instalacja zależności Pythona
         batchFile('pip install -r requirements.txt')
         // Uruchomienie testów Tomka
-        batchFile('python -m robot --outputdir results/tomek Tests/PetStore_Test_Tomek.robot')
+        batchFile('python -m robot --outputdir results/tomek --include %tag% Tests/PetStore_Test_Tomek.robot')
     }
 
     // Publikacja wyników Robot Framework po zakończeniu kroków
@@ -112,6 +120,10 @@ freeStyleJob('Tests/ATWP_Tests_Tomek') {
 multiJob('ATWP_Jenkins_MultiJob') {
     description('Orkiestrator - uruchamia testy Artura i Tomka równolegle')
 
+    parameters {
+        stringParam('tag', 'all', 'Tag testów do uruchomienia')
+    }
+
     triggers {
         // Uruchamia co godzinę
         cron('H * * * *')
@@ -124,8 +136,16 @@ multiJob('ATWP_Jenkins_MultiJob') {
         // Faza równoległa - oba joby uruchamiają się jednocześnie
         // ALWAYS = czekaj na oba joby niezależnie od wyniku
         phase('Run All Tests In Parallel', 'ALWAYS') {
-            phaseJob('Tests/ATWP_Tests_Artur')
-            phaseJob('Tests/ATWP_Tests_Tomek')
+            phaseJob('Tests/ATWP_Tests_Artur') {
+                parameters {
+                    predefinedProp('tag', '${tag}')
+                }
+            }
+            phaseJob('Tests/ATWP_Tests_Tomek') {
+                parameters {
+                    predefinedProp('tag', '${tag}')
+                }
+            }
         }
 
         // Kopiowanie output.xml z workspace'ów dzieci do workspace MultiJob
