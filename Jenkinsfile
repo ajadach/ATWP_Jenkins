@@ -71,7 +71,7 @@ pipeline {
                         timeout(time: 5, unit: 'MINUTES')
                     }
                     steps {
-                        bat 'python -m robot --outputdir results/artur Tests/PetStore_Test_Artur.robot'
+                        bat "python -m robot --outputdir results/artur --include ${params.tag} Tests/PetStore_Test_Artur.robot"
                     }
                 }
 
@@ -82,7 +82,7 @@ pipeline {
                         timeout(time: 5, unit: 'MINUTES')
                     }
                     steps {
-                        bat 'python -m robot --outputdir results/tomek Tests/PetStore_Test_Tomek.robot'
+                        bat "python -m robot --outputdir results/tomek --include ${params.tag} Tests/PetStore_Test_Tomek.robot"
                     }
                 }
             }
