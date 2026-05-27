@@ -9,7 +9,17 @@ pipeline {
     // triggers - definiuje kiedy pipeline ma się automatycznie uruchamiać
     triggers {
         // Trigger 1: uruchamia pipeline co godzinę
-        cron('H * * * *')
+        // Składnia cron: minuta godzina dzień_miesiąca miesiąc dzień_tygodnia
+        //   H * * * *  - H (hash) = Jenkins sam dobiera minutę w każdej godzinie
+        //                * * * *  - każda godzina, każdy dzień, każdy miesiąc, każdy dzień tygodnia
+        // Przykłady innych wartości:
+        //   H/15 * * * *   - co 15 minut
+        //   H 8 * * 1-5    - raz dziennie o 8:xx, tylko w dni robocze (pon-pt)
+        //   H 0 * * *      - raz dziennie o północy
+        //   H 8,20 * * *   - dwa razy dziennie: o 8:xx i 20:xx
+        //   H * * * 1      - co godzinę, ale tylko w poniedziałki
+        // Uwaga: H zamiast konkretnej minuty rozkłada obciążenie wielu jobów w czasie
+        cron('H 8 * * *')
 
         // Trigger 2: uruchamia pipeline po każdym commit/push do GitHub
         // Aby działał, wymagane jest:
@@ -62,6 +72,10 @@ pipeline {
 
                 // Testy napisane przez Artura - wyniki trafiają do katalogu results/artur
                 stage('Run Tests Artur') {
+                    options {
+                        // timeout - przerywa stage jeśli trwa dłużej niż 5 minut
+                        timeout(time: 5, unit: 'MINUTES')
+                    }
                     steps {
                         bat 'python -m robot --outputdir results/artur Tests/PetStore_Test_Artur.robot'
                     }
@@ -69,6 +83,10 @@ pipeline {
 
                 // Testy napisane przez Tomka - wyniki trafiają do katalogu results/tomek
                 stage('Run Tests Tomek') {
+                    options {
+                        // timeout - przerywa stage jeśli trwa dłużej niż 5 minut
+                        timeout(time: 5, unit: 'MINUTES')
+                    }
                     steps {
                         bat 'python -m robot --outputdir results/tomek Tests/PetStore_Test_Tomek.robot'
                     }
