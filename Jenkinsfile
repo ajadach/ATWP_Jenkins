@@ -36,16 +36,6 @@ pipeline {
         // githubPush()
     }
 
-    /* ============================================================
-       PRZYKŁAD: pełny blok triggers gdy webhook jest skonfigurowany
-       (zamień aktualny blok triggers na poniższy)
-    
-    triggers {
-        cron('H * * * *')
-        githubPush()
-    }
-    ============================================================ */
-
     // stages - główna sekcja pipeline, zawiera kolejne etapy wykonywane jeden po drugim
     stages {
 
