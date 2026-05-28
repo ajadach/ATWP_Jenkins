@@ -29,19 +29,10 @@ pipeline {
         // Uwaga: H zamiast konkretnej minuty rozkłada obciążenie wielu jobów w czasie
         cron('H 8 * * *')
 
-        // Trigger 2: uruchamia pipeline po każdym commit/push do GitHub
-        // Aby działał, wymagane jest:
-        //   1. Zainstalowany plugin "GitHub" w Jenkins (Manage Jenkins -> Plugins)
-        //   2. Webhook w repozytorium GitHub:
-        //      - GitHub repo -> Settings -> Webhooks -> Add webhook
-        //      - Payload URL: http://<PUBLICZNY_IP_LUB_NGROK>:8080/github-webhook/
-        //      - Content type: application/json
-        //      - Which events: Just the push event
-        //   3. Jenkins musi być dostępny publicznie (np. przez ngrok: `ngrok http 8080`)
-        //      bez tego GitHub nie dotrze do lokalnego Jenkins na localhost
-        //
-        // Gdy webhook jest skonfigurowany - odkomentuj poniższą linię:
+
+        // Odkomentuj gdy webhook jest gotowy:
         // githubPush()
+
     }
 
     // stages - główna sekcja pipeline, zawiera kolejne etapy wykonywane jeden po drugim
